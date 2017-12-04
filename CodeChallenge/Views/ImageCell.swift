@@ -13,7 +13,8 @@ class ImageCell: UICollectionViewCell {
 	fileprivate let imageView: UIImageView = {
 		let view = UIImageView()
 		view.translatesAutoresizingMaskIntoConstraints = false
-		view.contentMode = .scaleAspectFit
+		view.contentMode = .scaleAspectFill
+		view.clipsToBounds = true
 		view.backgroundColor = .green
 		return view
 	}()

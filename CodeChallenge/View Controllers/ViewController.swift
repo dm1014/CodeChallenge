@@ -17,7 +17,7 @@ class ViewController: UIViewController {
 		
 		enum Sizes {
 			static let spinner: CGFloat = 22.0
-			static let cell: CGFloat = UIScreen.main.bounds.width / 3.0
+			static let cell: CGFloat = UIScreen.main.bounds.width / 4.0
 		}
 	}
 	
@@ -36,7 +36,8 @@ class ViewController: UIViewController {
 		
 		let view = UICollectionView(frame: .zero, collectionViewLayout: layout)
 		view.translatesAutoresizingMaskIntoConstraints = false
-		view.alpha = 0.0
+		view.backgroundColor = .white
+		view.alpha = 1.0
 		view.register(ImageCell.self)
 		return view
 	}()
@@ -62,6 +63,9 @@ class ViewController: UIViewController {
 		view.addSubview(spinner)
 		view.addSubview(collectionView)
 		
+		collectionView.delegate = self
+		collectionView.dataSource = self
+		
 		let spinnerWidth = spinner.widthAnchor.constraint(equalToConstant: Constants.Sizes.spinner)
 		let spinnerHeight = spinner.heightAnchor.constraint(equalToConstant: Constants.Sizes.spinner)
 		let spinnerCenterX = spinner.centerXAnchor.constraint(equalTo: view.centerXAnchor)
@@ -77,6 +81,23 @@ class ViewController: UIViewController {
 		
 		spinner.startAnimating()
 	}
+}
+
+extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource {
+	func numberOfSections(in collectionView: UICollectionView) -> Int {
+		return 1
+	}
 	
+	func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+		return 50
+	}
+	
+	func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+		guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ImageCell.reuseIdentifier, for: indexPath) as? ImageCell else { return UICollectionViewCell() }
+		
+		cell.imageURL = "https://tse2.mm.bing.net/th?id=OIP.LMSqGg7LKzsYtAHB5sQ8zQEtDP&pid=Api"
+		
+		return cell
+	}
 }
 

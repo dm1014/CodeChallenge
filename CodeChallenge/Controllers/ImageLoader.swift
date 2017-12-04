@@ -14,8 +14,6 @@ let imageCache = NSCache<NSString, UIImage>()
 class ImageLoader {
 	
 	class func loadImage(from url: URL, _ completion: @escaping (UIImage?) -> ()) {
-		image = nil
-		
 		if let cachedImage = imageCache.object(forKey: url.absoluteString as NSString) {
 			completion(cachedImage)
 		} else {
