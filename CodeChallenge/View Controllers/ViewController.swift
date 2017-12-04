@@ -80,6 +80,8 @@ class ViewController: UIViewController {
 									 collectionTop, collectionLeft, collectionRight, collectionBottom])
 		
 		spinner.startAnimating()
+		
+		NetworkController.shared.search(keyword: "kite surfing")
 	}
 }
 
