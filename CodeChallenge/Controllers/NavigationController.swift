@@ -27,6 +27,7 @@ class NavigationController: UINavigationController {
 		super.init(rootViewController: rootViewController)
 		self.navigationBar.barTintColor = Themes.Colors.blue
 		self.navigationBar.tintColor = .white
+		self.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.white]
 		self.navigationBar.isTranslucent = false
 		self.navigationBar.shadowImage = UIImage()
 		self.navigationBar.setBackgroundImage(UIImage(), for: .default)
