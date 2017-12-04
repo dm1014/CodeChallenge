@@ -37,6 +37,7 @@ class ViewController: UIViewController {
 		let view = UICollectionView(frame: .zero, collectionViewLayout: layout)
 		view.translatesAutoresizingMaskIntoConstraints = false
 		view.alpha = 0.0
+		view.register(ImageCell.self)
 		return view
 	}()
 	

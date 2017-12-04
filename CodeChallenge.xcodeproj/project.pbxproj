@@ -12,6 +12,8 @@
 		D55728F81FD5F9C5008809F8 /* String+UIColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = D55728F71FD5F9C5008809F8 /* String+UIColor.swift */; };
 		D55728FE1FD5FC76008809F8 /* RootFlowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D55728FD1FD5FC76008809F8 /* RootFlowController.swift */; };
 		D55729001FD5FE33008809F8 /* Reusable.swift in Sources */ = {isa = PBXBuildFile; fileRef = D55728FF1FD5FE33008809F8 /* Reusable.swift */; };
+		D55729031FD5FFFD008809F8 /* ImageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D55729021FD5FFFD008809F8 /* ImageCell.swift */; };
+		D55729071FD60504008809F8 /* ImageLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = D55729061FD60504008809F8 /* ImageLoader.swift */; };
 		D57CD2CA1FD597FC0094C65C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D57CD2C91FD597FC0094C65C /* AppDelegate.swift */; };
 		D57CD2CC1FD597FC0094C65C /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D57CD2CB1FD597FC0094C65C /* ViewController.swift */; };
 		D57CD2D11FD597FC0094C65C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D57CD2D01FD597FC0094C65C /* Assets.xcassets */; };
@@ -24,6 +26,8 @@
 		D55728F71FD5F9C5008809F8 /* String+UIColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+UIColor.swift"; sourceTree = "<group>"; };
 		D55728FD1FD5FC76008809F8 /* RootFlowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootFlowController.swift; sourceTree = "<group>"; };
 		D55728FF1FD5FE33008809F8 /* Reusable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Reusable.swift; sourceTree = "<group>"; };
+		D55729021FD5FFFD008809F8 /* ImageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCell.swift; sourceTree = "<group>"; };
+		D55729061FD60504008809F8 /* ImageLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageLoader.swift; sourceTree = "<group>"; };
 		D57CD2C61FD597FC0094C65C /* CodeChallenge.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CodeChallenge.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D57CD2C91FD597FC0094C65C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		D57CD2CB1FD597FC0094C65C /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -57,6 +61,7 @@
 				D55728F21FD5F923008809F8 /* NavigationController.swift */,
 				D55728F41FD5F982008809F8 /* Themes.swift */,
 				D55728FF1FD5FE33008809F8 /* Reusable.swift */,
+				D55729061FD60504008809F8 /* ImageLoader.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -75,6 +80,14 @@
 				D55728FD1FD5FC76008809F8 /* RootFlowController.swift */,
 			);
 			path = "Flow Controllers";
+			sourceTree = "<group>";
+		};
+		D55729011FD5FFDC008809F8 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				D55729021FD5FFFD008809F8 /* ImageCell.swift */,
+			);
+			path = Views;
 			sourceTree = "<group>";
 		};
 		D57CD2BD1FD597FC0094C65C = {
@@ -96,6 +109,7 @@
 		D57CD2C81FD597FC0094C65C /* CodeChallenge */ = {
 			isa = PBXGroup;
 			children = (
+				D55729011FD5FFDC008809F8 /* Views */,
 				D55728FC1FD5FC68008809F8 /* Flow Controllers */,
 				D55728F61FD5F9BC008809F8 /* Extensions */,
 				D55728F11FD5F914008809F8 /* Controllers */,
@@ -181,9 +195,11 @@
 			files = (
 				D57CD2CC1FD597FC0094C65C /* ViewController.swift in Sources */,
 				D55728F51FD5F982008809F8 /* Themes.swift in Sources */,
+				D55729071FD60504008809F8 /* ImageLoader.swift in Sources */,
 				D55728F81FD5F9C5008809F8 /* String+UIColor.swift in Sources */,
 				D55728F31FD5F923008809F8 /* NavigationController.swift in Sources */,
 				D57CD2CA1FD597FC0094C65C /* AppDelegate.swift in Sources */,
+				D55729031FD5FFFD008809F8 /* ImageCell.swift in Sources */,
 				D55728FE1FD5FC76008809F8 /* RootFlowController.swift in Sources */,
 				D55729001FD5FE33008809F8 /* Reusable.swift in Sources */,
 			);
