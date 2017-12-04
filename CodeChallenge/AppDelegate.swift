@@ -15,8 +15,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 	func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
 		
+		let rootFC = RootFlowController()
+		let navController = NavigationController(rootViewController: rootFC.viewController)
+		
 		window = UIWindow(frame: UIScreen.main.bounds)
-		window?.rootViewController = NavigationController(rootViewController: ViewController())
+		window?.rootViewController = navController
 		window?.makeKeyAndVisible()
 		
 		return true

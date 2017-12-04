@@ -10,6 +10,8 @@ import UIKit
 
 class ViewController: UIViewController {
 
+	open var flowController: RootFlowController?
+	
 	override var preferredStatusBarStyle: UIStatusBarStyle { return .lightContent }
 	
 	override func viewDidLoad() {
