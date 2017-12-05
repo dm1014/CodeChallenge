@@ -44,6 +44,8 @@ class SelectedViewController: UIViewController {
 	fileprivate let images: [Image]
 	fileprivate let selectedItem: Int
 	
+	override var preferredStatusBarStyle: UIStatusBarStyle { return .lightContent }
+	
 	init(images: [Image], selectedItem: Int) {
 		self.images = images
 		self.selectedItem = selectedItem
