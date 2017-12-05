@@ -14,6 +14,7 @@ class ViewController: UIViewController {
 	fileprivate enum Constants {
 		enum Animations {
 			static let duration: TimeInterval = 0.2
+			static let copied: Int = 2
 		}
 		
 		enum Sizes {
@@ -21,6 +22,7 @@ class ViewController: UIViewController {
 			static let footer: CGFloat = 54.0
 			static let cell: CGFloat = UIScreen.main.bounds.width / 4.0
 			static let queryCount = 60
+			static let copiedContainer: CGFloat = 40.0
 		}
 	}
 	
@@ -48,6 +50,24 @@ class ViewController: UIViewController {
 		return view
 	}()
 	
+	fileprivate let copiedContainer: UIView = {
+		let view = UIView()
+		view.translatesAutoresizingMaskIntoConstraints = false
+		view.backgroundColor = Themes.Colors.green
+		return view
+	}()
+	
+	fileprivate let copiedLabel: UILabel = {
+		let label = UILabel()
+		label.translatesAutoresizingMaskIntoConstraints = false
+		label.text = "Copied!"
+		label.font = UIFont.boldSystemFont(ofSize: 17.0)
+		label.textColor = .white
+		label.textAlignment = .center
+		return label
+	}()
+	
+	fileprivate var containerBottom = NSLayoutConstraint()
 	fileprivate var searchedImages: [Image] = []
 	
 	open var flowController: RootFlowController?
@@ -70,6 +90,8 @@ class ViewController: UIViewController {
 	fileprivate func setupViews() {
 		view.addSubview(spinner)
 		view.addSubview(collectionView)
+		view.addSubview(copiedContainer)
+		copiedContainer.addSubview(copiedLabel)
 		
 		collectionView.delegate = self
 		collectionView.dataSource = self
@@ -89,8 +111,20 @@ class ViewController: UIViewController {
 		let collectionRight = collectionView.rightAnchor.constraint(equalTo: view.rightAnchor)
 		let collectionBottom = collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
 		
+		let containerLeft = copiedContainer.leftAnchor.constraint(equalTo: view.leftAnchor)
+		let containerRight = copiedContainer.rightAnchor.constraint(equalTo: view.rightAnchor)
+		let containerHeight = copiedContainer.heightAnchor.constraint(equalToConstant: Constants.Sizes.copiedContainer)
+		containerBottom = copiedContainer.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: Constants.Sizes.copiedContainer)
+		
+		let copiedTop = copiedLabel.topAnchor.constraint(equalTo: copiedContainer.topAnchor)
+		let copiedLeft = copiedLabel.leftAnchor.constraint(equalTo: copiedContainer.leftAnchor)
+		let copiedRight = copiedLabel.rightAnchor.constraint(equalTo: copiedContainer.rightAnchor)
+		let copiedBottom = copiedLabel.bottomAnchor.constraint(equalTo: copiedContainer.bottomAnchor)
+		
 		NSLayoutConstraint.activate([spinnerWidth, spinnerHeight, spinnerCenterX, spinnerCenterY,
-									 collectionTop, collectionLeft, collectionRight, collectionBottom])
+									 collectionTop, collectionLeft, collectionRight, collectionBottom,
+									 containerLeft, containerRight, containerHeight, containerBottom,
+									 copiedTop, copiedLeft, copiedRight, copiedBottom])
 		
 		spinner.startAnimating()
 		
@@ -116,6 +150,23 @@ class ViewController: UIViewController {
 		ImageLoader.loadImage(from: url) { (image) in
 			UIPasteboard.general.image = image
 			print("copied image")
+			self.handleCopiedImage()
+		}
+	}
+	
+	fileprivate func handleCopiedImage() {
+		view.layoutIfNeeded()
+		UIView.animate(withDuration: Constants.Animations.duration, animations: {
+			self.containerBottom.constant = 0.0
+			self.view.layoutIfNeeded()
+		}) { _ in
+			DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(Constants.Animations.copied), execute: {
+				self.view.layoutIfNeeded()
+				UIView.animate(withDuration: Constants.Animations.duration, animations: {
+					self.containerBottom.constant = Constants.Sizes.copiedContainer
+					self.view.layoutIfNeeded()
+				})
+			})
 		}
 	}
 }

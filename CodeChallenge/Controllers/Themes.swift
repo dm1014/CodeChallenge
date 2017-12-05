@@ -12,5 +12,6 @@ import UIKit
 struct Themes {
 	struct Colors {
 		static let blue = "#2B5EFB".hexColor
+		static let green = "#50CD9B".hexColor
 	}
 }
