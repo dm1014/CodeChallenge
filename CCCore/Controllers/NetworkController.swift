@@ -28,7 +28,7 @@ public class NetworkController {
 	
 	public static let shared = NetworkController()
 	
-	public func search(keyword: String, count: Int = 40, offset: Int = 0, _ completion: @escaping ([Image]?, Error?) -> ()) {
+	public func search(keyword: String, count: Int = 60, offset: Int = 0, _ completion: @escaping ([Image]?, Error?) -> ()) {
 		guard var components = URLComponents(string: Constants.Endpoints.base) else { return }
 		
 		let queryItem = URLQueryItem(name: Constants.Parameters.query, value: keyword)
