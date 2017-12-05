@@ -146,5 +146,9 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource {
 		guard kind == UICollectionElementKindSectionFooter, let footer = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionElementKindSectionFooter, withReuseIdentifier: LoadingFooterView.reuseIdentifier, for: indexPath) as? LoadingFooterView else { return UICollectionReusableView() }
 		return footer
 	}
+	
+	func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+		flowController?.presentSelectedImage(images: searchedImages, selectedItem: indexPath.item)
+	}
 }
 

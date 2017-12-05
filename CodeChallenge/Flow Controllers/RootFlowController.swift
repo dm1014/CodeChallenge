@@ -8,6 +8,7 @@
 
 import Foundation
 import UIKit
+import CCCore
 
 class RootFlowController {
 	let viewController: ViewController
@@ -17,8 +18,11 @@ class RootFlowController {
 		self.viewController.flowController = self
 	}
 	
-	public func presentSelectedImage() {
+	public func presentSelectedImage(images: [Image], selectedItem: Int) {
+		guard let navController = viewController.navigationController else { return }
 
+		let selectedVC = SelectedViewController(images: images, selectedItem: selectedItem)
+		navController.pushViewController(selectedVC, animated: true)
 	}
 
 }
