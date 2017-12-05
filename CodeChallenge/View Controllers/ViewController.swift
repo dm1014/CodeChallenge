@@ -18,7 +18,6 @@ class ViewController: UIViewController {
 		}
 		
 		enum Sizes {
-			static let textField: CGFloat = 44.0
 			static let spinner: CGFloat = 22.0
 			static let footer: CGFloat = 54.0
 			static let cell: CGFloat = UIScreen.main.bounds.width / 4.0
@@ -27,21 +26,10 @@ class ViewController: UIViewController {
 		}
 	}
 	
-	fileprivate let textField: UITextField = {
-		let field = UITextField()
-		field.translatesAutoresizingMaskIntoConstraints = false
-		field.font = UIFont.systemFont(ofSize: 24.0, weight: .light)
-		field.placeholder = "Search something..."
-		field.textAlignment = .center
-		field.returnKeyType = .search
-		return field
-	}()
-	
 	fileprivate let spinner: UIActivityIndicatorView = {
 		let view = UIActivityIndicatorView(activityIndicatorStyle: .gray)
 		view.translatesAutoresizingMaskIntoConstraints = false
 		view.hidesWhenStopped = true
-		view.isHidden = true
 		return view
 	}()
 	
@@ -100,13 +88,11 @@ class ViewController: UIViewController {
 	}
 	
 	fileprivate func setupViews() {
-		view.addSubview(textField)
 		view.addSubview(spinner)
 		view.addSubview(collectionView)
 		view.addSubview(copiedContainer)
 		copiedContainer.addSubview(copiedLabel)
 		
-		textField.delegate = self
 		collectionView.delegate = self
 		collectionView.dataSource = self
 		
@@ -114,11 +100,6 @@ class ViewController: UIViewController {
 		longPress.minimumPressDuration = 0.2
 		longPress.delaysTouchesBegan = true
 		collectionView.addGestureRecognizer(longPress)
-		
-		let textLeft = textField.leftAnchor.constraint(equalTo: view.leftAnchor)
-		let textRight = textField.rightAnchor.constraint(equalTo: view.rightAnchor)
-		let textHeight = textField.heightAnchor.constraint(equalToConstant: Constants.Sizes.textField)
-		let textCenterY =  textField.centerYAnchor.constraint(equalTo: view.centerYAnchor)
 		
 		let spinnerWidth = spinner.widthAnchor.constraint(equalToConstant: Constants.Sizes.spinner)
 		let spinnerHeight = spinner.heightAnchor.constraint(equalToConstant: Constants.Sizes.spinner)
@@ -140,12 +121,27 @@ class ViewController: UIViewController {
 		let copiedRight = copiedLabel.rightAnchor.constraint(equalTo: copiedContainer.rightAnchor)
 		let copiedBottom = copiedLabel.bottomAnchor.constraint(equalTo: copiedContainer.bottomAnchor)
 		
-		NSLayoutConstraint.activate([textLeft, textRight, textHeight, textCenterY,
-									 spinnerWidth, spinnerHeight, spinnerCenterX, spinnerCenterY,
+		NSLayoutConstraint.activate([spinnerWidth, spinnerHeight, spinnerCenterX, spinnerCenterY,
 									 collectionTop, collectionLeft, collectionRight, collectionBottom,
 									 containerLeft, containerRight, containerHeight, containerBottom,
 									 copiedTop, copiedLeft, copiedRight, copiedBottom])
 		
+		spinner.startAnimating()
+		
+		NetworkController.shared.search(keyword: "kite surfing") { [weak self] (images, error) in
+			DispatchQueue.main.async {
+				guard let weakSelf = self, let images = images else { return }
+				
+				weakSelf.searchedImages = images
+				weakSelf.collectionView.reloadData()
+				
+				UIView.animate(withDuration: Constants.Animations.duration, animations: {
+					weakSelf.collectionView.alpha = 1.0
+				}, completion: { _ in
+					weakSelf.spinner.stopAnimating()
+				})
+			}
+		}
 	}
 	
 	@objc fileprivate func longPressAction(_ sender: UILongPressGestureRecognizer) {
@@ -153,6 +149,7 @@ class ViewController: UIViewController {
 		
 		ImageLoader.loadImage(from: url) { (image) in
 			UIPasteboard.general.image = image
+			print("copied image")
 			self.handleCopiedImage()
 		}
 	}
@@ -183,35 +180,6 @@ extension ViewController {
 				weakSelf.collectionView.reloadData()
 			}
 		}
-	}
-}
-
-extension ViewController: UITextFieldDelegate {
-	func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-		guard let text = textField.text else { return false }
-		
-		textField.resignFirstResponder()
-		textField.isHidden = true
-		spinner.isHidden = false
-		spinner.startAnimating()
-		searchedImages = []
-		
-		NetworkController.shared.search(keyword: text) { [weak self] (images, error) in
-			DispatchQueue.main.async {
-				guard let weakSelf = self, let images = images else { return }
-				
-				weakSelf.searchedImages = images
-				weakSelf.collectionView.reloadData()
-				
-				UIView.animate(withDuration: Constants.Animations.duration, animations: {
-					weakSelf.collectionView.alpha = 1.0
-				}, completion: { _ in
-					weakSelf.spinner.stopAnimating()
-				})
-			}
-		}
-
-		return true
 	}
 }
 
