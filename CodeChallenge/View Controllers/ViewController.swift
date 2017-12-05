@@ -87,10 +87,15 @@ class ViewController: UIViewController {
 		NetworkController.shared.search(keyword: "kite surfing") { [weak self] (images, error) in
 			DispatchQueue.main.async {
 				guard let weakSelf = self, let images = images else { return }
+				
 				weakSelf.searchedImages = images
 				weakSelf.collectionView.reloadData()
-				weakSelf.collectionView.alpha = 1.0
-				weakSelf.spinner.stopAnimating()
+				
+				UIView.animate(withDuration: Constants.Animations.duration, animations: {
+					weakSelf.collectionView.alpha = 1.0
+				}, completion: { _ in
+					weakSelf.spinner.stopAnimating()
+				})
 			}
 		}
 	}
