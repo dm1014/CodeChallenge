@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import CCCore
 
 class ViewController: UIViewController {
 
@@ -37,10 +38,12 @@ class ViewController: UIViewController {
 		let view = UICollectionView(frame: .zero, collectionViewLayout: layout)
 		view.translatesAutoresizingMaskIntoConstraints = false
 		view.backgroundColor = .white
-		view.alpha = 1.0
+		view.alpha = 0.0
 		view.register(ImageCell.self)
 		return view
 	}()
+	
+	fileprivate var searchedImages: [Image] = []
 	
 	open var flowController: RootFlowController?
 	
@@ -80,6 +83,21 @@ class ViewController: UIViewController {
 									 collectionTop, collectionLeft, collectionRight, collectionBottom])
 		
 		spinner.startAnimating()
+		
+		NetworkController.shared.search(keyword: "kite surfing") { [weak self] (images, error) in
+			DispatchQueue.main.async {
+				guard let weakSelf = self, let images = images else { return }
+				
+				weakSelf.searchedImages = images
+				weakSelf.collectionView.reloadData()
+				
+				UIView.animate(withDuration: Constants.Animations.duration, animations: {
+					weakSelf.collectionView.alpha = 1.0
+				}, completion: { _ in
+					weakSelf.spinner.stopAnimating()
+				})
+			}
+		}
 	}
 }
 
@@ -89,13 +107,14 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource {
 	}
 	
 	func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-		return 50
+		return searchedImages.count
 	}
 	
 	func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
 		guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ImageCell.reuseIdentifier, for: indexPath) as? ImageCell else { return UICollectionViewCell() }
 		
-		cell.imageURL = "https://tse2.mm.bing.net/th?id=OIP.LMSqGg7LKzsYtAHB5sQ8zQEtDP&pid=Api"
+		let image = searchedImages[indexPath.row]
+		cell.imageURL = image.thumbnailUrl
 		
 		return cell
 	}

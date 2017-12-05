@@ -10,12 +10,18 @@ import Foundation
 import UIKit
 
 class ImageCell: UICollectionViewCell {
+	fileprivate enum Constants {
+		enum Animations {
+			static let duration: TimeInterval = 0.2
+		}
+	}
+	
 	fileprivate let imageView: UIImageView = {
 		let view = UIImageView()
 		view.translatesAutoresizingMaskIntoConstraints = false
 		view.contentMode = .scaleAspectFill
 		view.clipsToBounds = true
-		view.backgroundColor = .green
+		view.alpha = 0.0
 		return view
 	}()
 	
@@ -31,6 +37,9 @@ class ImageCell: UICollectionViewCell {
 				guard let weakSelf = self else { return }
 				if let img = image {
 					weakSelf.imageView.image = img
+					UIView.animate(withDuration: Constants.Animations.duration, animations: {
+						weakSelf.imageView.alpha = 1.0
+					})
 				} else {
 					weakSelf.imageView.isHidden = true
 				}
