@@ -33,6 +33,7 @@ class ViewController: UIViewController {
 		field.font = UIFont.systemFont(ofSize: 24.0, weight: .light)
 		field.placeholder = "Search something..."
 		field.textAlignment = .center
+		field.returnKeyType = .search
 		return field
 	}()
 	
