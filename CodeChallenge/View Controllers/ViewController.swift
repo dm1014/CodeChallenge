@@ -107,7 +107,15 @@ class ViewController: UIViewController {
 }
 
 extension ViewController {
-	
+	fileprivate func performSearch(keyword: String) {
+		NetworkController.shared.search(keyword: keyword, offset: searchedImages.count) { [weak self] (images, error) in
+			guard let weakSelf = self, let images = images else { return }
+			DispatchQueue.main.async {
+				weakSelf.searchedImages.append(contentsOf: images)
+				weakSelf.collectionView.reloadData()
+			}
+		}
+	}
 }
 
 extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource {
@@ -121,7 +129,7 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource {
 	
 	func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
 		if indexPath.row == searchedImages.count - 1 {
-			// make another search call
+			performSearch(keyword: "kite surfing")
 		}
 	}
 	
