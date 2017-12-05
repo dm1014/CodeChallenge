@@ -13,7 +13,7 @@ public struct Image {
 	public let imageId: String
 	public let thumbnailUrl: String
 	public let contentUrl: String
-	
+		
 	init(name: String, id: String, thumbnail: String, content: String) {
 		self.name = name
 		self.imageId = id
