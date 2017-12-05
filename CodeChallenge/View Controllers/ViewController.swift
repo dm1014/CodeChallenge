@@ -18,7 +18,9 @@ class ViewController: UIViewController {
 		
 		enum Sizes {
 			static let spinner: CGFloat = 22.0
+			static let footer: CGFloat = 54.0
 			static let cell: CGFloat = UIScreen.main.bounds.width / 4.0
+			static let queryCount = 60
 		}
 	}
 	
@@ -34,12 +36,15 @@ class ViewController: UIViewController {
 		layout.itemSize = CGSize(width: Constants.Sizes.cell, height: Constants.Sizes.cell)
 		layout.minimumLineSpacing = 0.0
 		layout.minimumInteritemSpacing = 0.0
+		layout.footerReferenceSize = CGSize(width: 0.0, height: Constants.Sizes.footer)
 		
 		let view = UICollectionView(frame: .zero, collectionViewLayout: layout)
 		view.translatesAutoresizingMaskIntoConstraints = false
+		view.showsVerticalScrollIndicator = false
 		view.backgroundColor = .white
 		view.alpha = 0.0
 		view.register(ImageCell.self)
+		view.register(LoadingFooterView.self, forSupplementaryViewOfKind: UICollectionElementKindSectionFooter)
 		return view
 	}()
 	
@@ -101,6 +106,18 @@ class ViewController: UIViewController {
 	}
 }
 
+extension ViewController {
+	fileprivate func performSearch(keyword: String) {
+		NetworkController.shared.search(keyword: keyword, offset: searchedImages.count) { [weak self] (images, error) in
+			guard let weakSelf = self, let images = images else { return }
+			DispatchQueue.main.async {
+				weakSelf.searchedImages.append(contentsOf: images)
+				weakSelf.collectionView.reloadData()
+			}
+		}
+	}
+}
+
 extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource {
 	func numberOfSections(in collectionView: UICollectionView) -> Int {
 		return 1
@@ -110,6 +127,12 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource {
 		return searchedImages.count
 	}
 	
+	func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+		if indexPath.row == searchedImages.count - 1 {
+			performSearch(keyword: "kite surfing")
+		}
+	}
+	
 	func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
 		guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ImageCell.reuseIdentifier, for: indexPath) as? ImageCell else { return UICollectionViewCell() }
 		
@@ -117,6 +140,11 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource {
 		cell.imageURL = image.thumbnailUrl
 		
 		return cell
+	}
+	
+	func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+		guard kind == UICollectionElementKindSectionFooter, let footer = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionElementKindSectionFooter, withReuseIdentifier: LoadingFooterView.reuseIdentifier, for: indexPath) as? LoadingFooterView else { return UICollectionReusableView() }
+		return footer
 	}
 }
 
