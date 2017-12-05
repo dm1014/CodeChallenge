@@ -74,6 +74,11 @@ class ViewController: UIViewController {
 		collectionView.delegate = self
 		collectionView.dataSource = self
 		
+		let longPress = UILongPressGestureRecognizer(target: self, action: #selector(longPressAction(_:)))
+		longPress.minimumPressDuration = 0.2
+		longPress.delaysTouchesBegan = true
+		collectionView.addGestureRecognizer(longPress)
+		
 		let spinnerWidth = spinner.widthAnchor.constraint(equalToConstant: Constants.Sizes.spinner)
 		let spinnerHeight = spinner.heightAnchor.constraint(equalToConstant: Constants.Sizes.spinner)
 		let spinnerCenterX = spinner.centerXAnchor.constraint(equalTo: view.centerXAnchor)
@@ -102,6 +107,15 @@ class ViewController: UIViewController {
 					weakSelf.spinner.stopAnimating()
 				})
 			}
+		}
+	}
+	
+	@objc fileprivate func longPressAction(_ sender: UILongPressGestureRecognizer) {
+		guard sender.state == .ended, let indexPath = collectionView.indexPathForItem(at: sender.location(in: collectionView)), let url = URL(string: searchedImages[indexPath.item].contentUrl) else { return }
+		
+		ImageLoader.loadImage(from: url) { (image) in
+			UIPasteboard.general.image = image
+			print("copied image")
 		}
 	}
 }
