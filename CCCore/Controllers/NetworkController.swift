@@ -8,7 +8,7 @@
 
 import Foundation
 
-class NetworkController {
+public class NetworkController {
 	fileprivate enum Constants {
 		enum Endpoints {
 			static let base = "https://api.cognitive.microsoft.com/bing/v5.0/images/search"
@@ -28,7 +28,7 @@ class NetworkController {
 	
 	public static let shared = NetworkController()
 	
-	public func search(keyword: String, count: Int = 40, offset: Int = 0) {
+	public func search(keyword: String, count: Int = 40, offset: Int = 0, _ completion: @escaping ([Image]?, Error?) -> ()) {
 		guard var components = URLComponents(string: Constants.Endpoints.base) else { return }
 		
 		let queryItem = URLQueryItem(name: Constants.Parameters.query, value: keyword)
@@ -47,10 +47,18 @@ class NetworkController {
 			guard let data = data, let response = response as? HTTPURLResponse, response.statusCode >= 200, response.statusCode < 400 , error == nil else { return }
 			
 			do {
-				let object = try JSONSerialization.jsonObject(with: data) as? [String: Any]
-				print(object)
+				guard let object = try JSONSerialization.jsonObject(with: data) as? [String: Any] else { return }
+				do {
+					guard let images = try DataController.parseSearchResponse(object) else {
+						completion(nil, nil)
+						return
+					}
+					completion(images, nil)
+				} catch {
+					completion(nil, error)
+				}
 			} catch {
-				print(error)
+				completion(nil, error)
 			}
 		}.resume()
 	}
